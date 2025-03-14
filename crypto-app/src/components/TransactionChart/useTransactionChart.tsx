@@ -7,11 +7,20 @@ export function useTranscationChart() {
   const intervalRef = useRef<number | null>(null);
   const [chartData, setChartData] = useState<TransactionResData[]>([]);
   const { showBoundary } = useErrorBoundary();
+  const [loading, setLoading] = useState(false);
 
-  const fetchData = () => {
+  const fetchData = (initialLoad?: boolean) => {
+    if (initialLoad) {
+      setLoading(true);
+    }
     getData()
-      .then((resData) => setChartData(resData))
+      .then((resData) => {
+        if (initialLoad) {
+          setLoading(false);
+        }
+        setChartData(resData);
+      })
       .catch((error) => showBoundary(error));
   };
-  return { fetchData, intervalRef, chartData };
+  return { fetchData, intervalRef, chartData, loading };
 }

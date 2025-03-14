@@ -4,12 +4,13 @@ import { getOption } from "./option";
 import { TransactionResData } from "./types";
 import ReactECharts from "echarts-for-react";
 import "./styles.css";
+import { Loader } from "./loader";
 
 export const TransactionChart = () => {
-  const { fetchData, intervalRef, chartData } = useTranscationChart();
+  const { fetchData, intervalRef, chartData, loading } = useTranscationChart();
 
   useEffect(() => {
-    fetchData();
+    fetchData(true);
     intervalRef.current = setInterval(fetchData, 5000);
     return () => {
       if (intervalRef.current !== null) {
@@ -28,7 +29,11 @@ export const TransactionChart = () => {
 
   return (
     <div>
-      <ReactECharts option={option} className="chart" />
+      {loading ? (
+        <Loader />
+      ) : (
+        <ReactECharts option={option} className="chart" />
+      )}
     </div>
   );
 };
