@@ -1,4 +1,5 @@
-const url = "https://api.binance.com/api/v3/trades?symbol=BTCUSDC";
+const searchParams = new URLSearchParams("symbol=BTCUSDC");
+const url = `https://api.binance.com/api/v3/trades?${searchParams}`;
 
 export async function getData() {
   try {
