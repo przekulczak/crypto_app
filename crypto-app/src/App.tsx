@@ -1,3 +1,4 @@
+import ReactECharts, { EChartsOption } from "echarts-for-react";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
@@ -36,11 +37,62 @@ function App() {
       getData().then((resData) => setChartData(resData));
     }, 5000);
   }, []);
+
   const prices = chartData.map((data: ResData) => data.price);
   const volumes = chartData.map((data: ResData) => data.qty);
-  const timestamps = chartData.map((data: ResData) => data.time);
+  const timestamps = chartData.map((data: ResData) =>
+    new Date(data.time).toLocaleTimeString()
+  );
+  const option: EChartsOption = {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "cross",
+      },
+    },
+    legend: {
+      data: ["Price", "Volume"],
+    },
+    xAxis: {
+      type: "category",
+      data: timestamps,
+    },
+    yAxis: [
+      {
+        type: "value",
+        name: "Price",
+        position: "right",
+      },
+      {
+        type: "value",
+        name: "Volume",
+        position: "left",
+      },
+    ],
+    series: [
+      {
+        data: prices,
+        type: "line",
+        name: "Price",
+        yAxisIndex: 0,
+      },
+      {
+        data: volumes,
+        type: "bar",
+        name: "Volume",
+        yAxisIndex: 1,
+      },
+    ],
+  };
 
-  return <></>;
+  return (
+    <div style={{ height: "100vh", width: "100vw" }}>
+      <ReactECharts
+        option={option}
+        style={{ height: "100vh", width: "100vw" }}
+      />
+    </div>
+  );
 }
 
 export default App;
