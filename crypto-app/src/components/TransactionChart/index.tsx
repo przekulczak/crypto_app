@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { getOption } from "./option";
+import { TransactionResData } from "./types";
 
 const TransactionChart = () => {
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
-  const [chartData, setChartData] = useState<ResData[]>([]);
+  const [chartData, setChartData] = useState<TransactionResData[]>([]);
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
