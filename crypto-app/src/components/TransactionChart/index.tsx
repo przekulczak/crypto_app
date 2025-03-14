@@ -1,21 +1,12 @@
-import { useRef, useState, useEffect } from "react";
+import { useTranscationChart } from "./useTransactionChart";
+import { useEffect } from "react";
 import { getOption } from "./option";
 import { TransactionResData } from "./types";
-import { getData } from "../../heleprs/getData";
 import ReactECharts from "echarts-for-react";
-import { useErrorBoundary } from "react-error-boundary";
 import "./styles.css";
 
 export const TransactionChart = () => {
-  const intervalRef = useRef<number | null>(null);
-  const [chartData, setChartData] = useState<TransactionResData[]>([]);
-  const { showBoundary } = useErrorBoundary();
-
-  const fetchData = () => {
-    getData()
-      .then((resData) => setChartData(resData))
-      .catch((error) => showBoundary(error));
-  };
+  const { fetchData, intervalRef, chartData } = useTranscationChart();
 
   useEffect(() => {
     fetchData();
