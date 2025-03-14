@@ -1,6 +1,11 @@
+import { EChartsOption } from "echarts";
 import { OptionParams } from "./types";
 
-export const getOption = ({ timestamps, prices, volumes }: OptionParams) => ({
+export const getOption = ({
+  timestamps,
+  prices,
+  volumes,
+}: OptionParams): EChartsOption => ({
   tooltip: {
     trigger: "axis",
     axisPointer: {

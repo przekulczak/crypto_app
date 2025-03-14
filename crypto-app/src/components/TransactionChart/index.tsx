@@ -1,27 +1,39 @@
 import { useRef, useState, useEffect } from "react";
 import { getOption } from "./option";
 import { TransactionResData } from "./types";
+import { getData } from "../../heleprs/getData";
+import ReactECharts from "echarts-for-react";
 
-const TransactionChart = () => {
-  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
+export const TransactionChart = () => {
+  const intervalRef = useRef<number | null>(null);
   const [chartData, setChartData] = useState<TransactionResData[]>([]);
 
+  const fetchData = () => {
+    getData()
+      .then((resData) => setChartData(resData))
+      .catch();
+  };
+
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      getData().then((resData) => setChartData(resData));
-    }, 5000);
+    fetchData();
+    intervalRef.current = setInterval(fetchData, 5000);
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, []);
 
-  const prices = chartData.map((data: ResData) => data.price);
-  const volumes = chartData.map((data: ResData) => data.qty);
-  const timestamps = chartData.map((data: ResData) =>
+  const prices = chartData.map((data: TransactionResData) => data.price);
+  const volumes = chartData.map((data: TransactionResData) => data.qty);
+  const timestamps = chartData.map((data: TransactionResData) =>
     new Date(data.time).toLocaleTimeString()
   );
-
+  const option = getOption({ prices, volumes, timestamps });
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div>
       <ReactECharts
-        option={getOption({ prices, volumes, timestamps })}
+        option={option}
         style={{ height: "100vh", width: "100vw" }}
       />
     </div>
