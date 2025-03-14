@@ -3,15 +3,17 @@ import { getOption } from "./option";
 import { TransactionResData } from "./types";
 import { getData } from "../../heleprs/getData";
 import ReactECharts from "echarts-for-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 export const TransactionChart = () => {
   const intervalRef = useRef<number | null>(null);
   const [chartData, setChartData] = useState<TransactionResData[]>([]);
+  const { showBoundary } = useErrorBoundary();
 
   const fetchData = () => {
     getData()
       .then((resData) => setChartData(resData))
-      .catch();
+      .catch((error) => showBoundary(error));
   };
 
   useEffect(() => {

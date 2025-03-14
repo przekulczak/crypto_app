@@ -7,7 +7,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ErrorBoundary fallback={<>{ErrorPage}</>}>
+    <ErrorBoundary fallbackRender={ErrorPage}>
       <App />
     </ErrorBoundary>
   </StrictMode>
