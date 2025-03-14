@@ -1,6 +1,11 @@
 import { EChartsOption } from "echarts";
 import { OptionParams } from "./types";
 
+interface ValueType {
+  min: number;
+  max: number;
+}
+
 export const getOption = ({
   timestamps,
   prices,
@@ -24,6 +29,8 @@ export const getOption = ({
       type: "value",
       name: "Price",
       position: "right",
+      min: (val: ValueType) => Math.floor(val.min * 0.999),
+      max: (val: ValueType) => Math.ceil(val.max * 1.001),
     },
     {
       type: "value",

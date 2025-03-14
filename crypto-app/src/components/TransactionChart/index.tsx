@@ -4,6 +4,7 @@ import { TransactionResData } from "./types";
 import { getData } from "../../heleprs/getData";
 import ReactECharts from "echarts-for-react";
 import { useErrorBoundary } from "react-error-boundary";
+import "./styles.css";
 
 export const TransactionChart = () => {
   const intervalRef = useRef<number | null>(null);
@@ -31,13 +32,12 @@ export const TransactionChart = () => {
   const timestamps = chartData.map((data: TransactionResData) =>
     new Date(data.time).toLocaleTimeString()
   );
+
   const option = getOption({ prices, volumes, timestamps });
+
   return (
     <div>
-      <ReactECharts
-        option={option}
-        style={{ height: "100vh", width: "100vw" }}
-      />
+      <ReactECharts option={option} className="chart" />
     </div>
   );
 };
