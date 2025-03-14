@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useRef, useState } from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+async function getData() {
+  const url = "https://api.binance.com/api/v3/trades?symbol=BTCUSDC";
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const json = await response.json();
+    return json;
+    //todo type
+  } catch (error: any) {
+    console.error(error.message);
+  }
 }
 
-export default App
+interface ResData {
+  id: string;
+  isBestMatch: boolean;
+  isBuyerMaker: boolean;
+  price: string;
+  qty: string;
+  quoteQty: string;
+  time: 1741944346734;
+}
+
+function App() {
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
+  const [chartData, setChartData] = useState<ResData[]>([]);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      getData().then((resData) => setChartData(resData));
+    }, 5000);
+  }, []);
+  const prices = chartData.map((data: ResData) => data.price);
+  const volumes = chartData.map((data: ResData) => data.qty);
+  const timestamps = chartData.map((data: ResData) => data.time);
+
+  return <></>;
+}
+
+export default App;
